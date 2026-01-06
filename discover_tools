@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# Update and install dependencies
+sudo apt-get update -y
+sudo apt-get install -y wget curl git unzip gcc make
+
+# Cài đặt Go
+GO_VERSION="1.20.4"
+wget https://go.dev/dl/go$GO_VERSION.linux-amd64.tar.gz
+sudo tar -C /usr/local -xzf go$GO_VERSION.linux-amd64.tar.gz
+echo "export PATH=$PATH:/usr/local/go/bin" >> ~/.zshrc
+source ~/.zshrc
+
+# Kiểm tra cài đặt Go
+go version
+
+# Cài đặt nuclei
+GO111MODULE=on go install -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei@latest
+
+# Cài đặt httpx
+GO111MODULE=on go install -v github.com/projectdiscovery/httpx/cmd/httpx@latest
+
+# Cài đặt subfinder
+GO111MODULE=on go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
+
+
+
+
+
+
+# Thêm thư mục go vào PATH (nếu chưa có)
+if ! grep -q "export PATH=\$PATH:\$HOME/go/bin" ~/.zshrc; then
+  echo "export PATH=\$PATH:\$HOME/go/bin" >> ~/.zshrc
+  source ~/.zshrc
+fi
+
+# Kiểm tra các công cụ đã cài
+echo "Kiểm tra các công cụ đã cài đặt:"
+nuclei -version
+httpx -version
+subfinder -version
+
